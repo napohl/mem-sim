@@ -13,6 +13,6 @@ using namespace std;
  * The main entry point to the simulation.
  */
 int main(int argc, char** argv) {
-  // TODO: implement me
-  return EXIT_SUCCESS;
+    // TODO: implement me
+    return EXIT_SUCCESS;
 }

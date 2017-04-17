@@ -5,17 +5,20 @@
  */
 
 #include "physical_address/physical_address.h"
+#include <sstream>
 
 using namespace std;
 
 
 string PhysicalAddress::to_string() const {
-  // TODO: implement me
-  return "";
+    stringstream stream;
+    stream << frame << offset;
+    return stream.str();
 }
 
 
 ostream& operator <<(ostream& out, const PhysicalAddress& address) {
-  // TODO: implement me
-  return out;
+    //stringstream stream;
+    //stream << frame << offset << " [frame: " << frame << "; offset: " << offset << "]";
+    return out;
 }
