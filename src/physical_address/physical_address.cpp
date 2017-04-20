@@ -23,7 +23,6 @@ string PhysicalAddress::to_string() const {
 
 
 ostream& operator <<(ostream& out, const PhysicalAddress& address) {
-    //stringstream stream;
-    //stream << frame << offset << " [frame: " << frame << "; offset: " << offset << "]";
+    out << address.to_string() << " [frame: " << address.frame << "; offset: " << address.offset << "]";
     return out;
 }
