@@ -5,23 +5,33 @@
  */
 
 #include "virtual_address/virtual_address.h"
+#include <string>
+#include <bitset>
 
 using namespace std;
 
 
 VirtualAddress VirtualAddress::from_string(int process_id, string address) {
-  // TODO: implement me
-  return VirtualAddress(0, 0, 0);
+    string pageStr = address.substr(0, 10);
+    string offsetStr = address.substr(10, 6);
+    int pageInt = stoi(pageStr, nullptr, 2);
+    int offsetInt = stoi(offsetStr, nullptr, 2);
+    return VirtualAddress(process_id, pageInt, offsetInt);
 }
 
 
 string VirtualAddress::to_string() const {
-  // TODO: implement me
-  return "";
+    string address;
+    //page is 10 bits
+    bitset<10> pageBit(page);
+    //offset is 6 bits
+    bitset<6> offsetBit(offset);
+    address = pageBit.to_string() + offsetBit.to_string();
+    return address;
 }
 
 
 ostream& operator <<(ostream& out, const VirtualAddress& address) {
-  // TODO: implement me
-  return out;
+    out << "PID " << address.process_id << " @ " << address.to_string() << " [page: " << address.page << "; offset: " << address.offset << "]";
+    return out;
 }
