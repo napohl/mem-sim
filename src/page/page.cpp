@@ -15,12 +15,11 @@ const size_t Page::PAGE_SIZE;
 
 Page* Page::read_from_input(std::istream& in) {
     
-//    return nullptr;
-
     char c;
     vector<char> data;
 
-    //
+    //the statement is used to grab each part of the input
+    //byte by byte, this allows us to get null characters and white space
     while (in.get(c)) {
         data.push_back(c);
         if (data.size() == PAGE_SIZE) {
