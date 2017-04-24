@@ -48,6 +48,10 @@ bool parse_flags(int argc, char** argv, FlagOptions& flags) {
     int flag, index;
     int frames;
     string strat;
+    //if there are no arguments, return false
+    if (argc == 0) {
+        return false;
+    }
     for (int i = 0; i < argc; i++) {
         index = 0;
         flag = getopt_long(argc, argv, "hvf:s:", options, &index);
