@@ -45,17 +45,16 @@ void print_usage() {
 
 
 bool parse_flags(int argc, char** argv, FlagOptions& flags) {
-    int flag, index;
+    int flag, index = 0;
     int frames;
     string strat;
     //if there are no arguments, return false
     if (argc == 0) {
         return false;
     }
-    for (int i = 0; i < argc; i++) {
-        index = 0;
-        flag = getopt_long(argc, argv, "hvf:s:", options, &index);
-        if (flag == -1) return false;
+    while ((flag = getopt_long(argc, argv, "hvf:s:", options, &index)) != -1) {
+    //for (int i = 0; i < argc; i++) {
+        //flag = getopt_long(argc, argv, "hvf:s:", options, &index);
 
         switch (flag) {
             case 'v':
@@ -92,9 +91,15 @@ bool parse_flags(int argc, char** argv, FlagOptions& flags) {
                 //break;
             default:
                 print_usage();
-                return false;
+                //return false;
                 //exit(EXIT_FAILURE);
         }
+    }
+    for (int i = optind; i < argc; i++) {
+        flags.filename = argv[i];
+    }
+    if (flags.filename == "") {
+        return false;
     }
     return true;
 }
