@@ -8,6 +8,7 @@
 #include <iostream>
 #include <getopt.h>
 #include <unistd.h>
+#include <stdexcept>
 
 
 using namespace std;
@@ -15,9 +16,9 @@ using namespace std;
 //used for flags
 const struct option options[] = 
 {
-    {"strategy", required_argument, NULL, 't'},
+    {"strategy", required_argument, NULL, 's'},
     {"verbose", no_argument, NULL, 'v'},
-    {"max_frames", required_argument, NULL, 'a'},
+    {"max-frames", required_argument, NULL, 'f'},
     {"help", no_argument, NULL, 'h'},
     {0,0,0,0}
 };
@@ -61,13 +62,18 @@ bool parse_flags(int argc, char** argv, FlagOptions& flags) {
                 flags.verbose = true;
                 break;
             case 'f':
-                frames = stoi(optarg);
+                try {
+                    frames = stoi(optarg);
+                }
+                catch(invalid_argument& e) {
+                    //if we recieve an invalid argument (like "one") return false
+                    return false;
+                }
+                //cout << "optarg = " << optarg << "\tframes = " << frames << endl;
                 if (frames > 0) {
                     flags.max_frames = frames;    
                 }
                 else {
-                    //print_usage();
-                    //exit(EXIT_FAILURE);
                     return false;
                 }
                 break;
@@ -80,19 +86,14 @@ bool parse_flags(int argc, char** argv, FlagOptions& flags) {
                     flags.strategy = ReplacementStrategy::LRU;
                 }
                 else {
-                    //print_usage();
-                    //exit(EXIT_FAILURE);
                     return false;
                 }
                 break;
             case 'h':
-                //print_usage();
-                //exit(0);
-                //break;
+                return false;
+                break;
             default:
-                print_usage();
-                //return false;
-                //exit(EXIT_FAILURE);
+                return false;
         }
     }
     for (int i = optind; i < argc; i++) {
