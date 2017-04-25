@@ -11,22 +11,19 @@ using namespace std;
 
 Process* Process::read_from_input(std::istream& in) {
     char c;
-    int totalSize = 0;
+    size_t totalSize = 0;
     vector<Page*> inputPages;
 
-    while (in.get(c)) {
+    while (true) {
         Page* page = Page::read_from_input(in);
+        //if the datastream is empty, we will get back a nullptr
+        if (page == nullptr) {
+            break;
+        }
         inputPages.push_back(page);
         totalSize += page->size();
     }
     Process* process = new Process(totalSize, inputPages);
-
-    //while istream
-    //Page = read_from_input
-    //add to vector
-    //add page size to total size
-    //end while
-    //make constructor
 
     return process;
 }
@@ -38,14 +35,16 @@ size_t Process::size() const {
 
 
 bool Process::is_valid_page(size_t index) const {
-    // TODO: implement me
-    return false;
+    if (index >= pages.size()) {
+        return false;
+    }
+    else {
+        return true;
+    }
 }
 
-//i don't know what resident set size is yet
 size_t Process::get_rss() const {
-    // TODO: implement me
-    return 0;
+    return page_table.get_present_page_count();
 }
 
 
@@ -53,7 +52,7 @@ double Process::get_fault_percent() const {
     if (memory_accesses == 0) {
         return 0;
     }
-    double val = page_faults / memory_accesses;
+    double val = (double) page_faults / (double) memory_accesses;
     //multiply by 100 to get percentage
     return val * 100;
 }
