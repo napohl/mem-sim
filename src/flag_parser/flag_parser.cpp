@@ -24,7 +24,7 @@ const struct option options[] =
 };
 
 void print_usage() {
-    /*
+    
     cout <<
         "Usage: mem-sim [options] filename\n"
         "\n"
@@ -40,8 +40,7 @@ void print_usage() {
         "\n"
         "  -h --help\n"
         "      Display a help message about these flags and exit\n"
-        "\n";
-        */
+        "\n";    
 }
 
 
@@ -54,9 +53,6 @@ bool parse_flags(int argc, char** argv, FlagOptions& flags) {
         return false;
     }
     while ((flag = getopt_long(argc, argv, "hvf:s:", options, &index)) != -1) {
-    //for (int i = 0; i < argc; i++) {
-        //flag = getopt_long(argc, argv, "hvf:s:", options, &index);
-
         switch (flag) {
             case 'v':
                 flags.verbose = true;
@@ -69,7 +65,6 @@ bool parse_flags(int argc, char** argv, FlagOptions& flags) {
                     //if we recieve an invalid argument (like "one") return false
                     return false;
                 }
-                //cout << "optarg = " << optarg << "\tframes = " << frames << endl;
                 if (frames > 0) {
                     flags.max_frames = frames;    
                 }
