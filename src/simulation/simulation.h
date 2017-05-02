@@ -29,7 +29,7 @@ public:
   /**
    * Runs the simulation.
    */
-  void run(FlagOptions flags, ifstream file, int& totalUsedFrames);
+  void run(FlagOptions flags, ifstream file, int& totalUsedFrames, vector<Process*> processes);
 
 // PRIVATE METHODS
 private:

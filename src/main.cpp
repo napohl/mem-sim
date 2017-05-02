@@ -26,16 +26,19 @@ using namespace std;
 /**
  * helper function for printing out results of the simulation
  */
-void printEndResults(vector<int> pids, vector<Process*> processes, int totalMemAccess, int totalPageFaults, int totalUsedFrames) {
+void printEndResults(vector<int> pids, vector<Process*> processes, int totalUsedFrames) {
+    int totalAccess = 0, totalFaults = 0;
     cout << "\nDONE!\n\n";
     //pids and processes should be the same size and correlate correctly
     for (int i = 0; i < pids.size(); i++) {
         cout << "Process\t" << pids[i] << ":\tACCESSES: " << processes[i]->memory_accesses << "\tFAULTS: " << processes[i]->page_faults;
         cout << "\tFAULT_RATE: " << processes[i]->get_fault_percent() << "\tRSS: " << processes[i]->get_rss() << endl;
+        totalAccess += processes[i]->memory_accesses;
+        totalFaults += processes[i]->page_faults;
     }
 
-    cout << "\nTotal memory accesses: " << totalMemAccess << endl;
-    cout << "Total page faults: " << totalPageFaults << endl;
+    cout << "\nTotal memory accesses: " << totalAccess << endl;
+    cout << "Total page faults: " << totalFaults << endl;
     //total frames is always 512
     cout << "Free frames remaining: " << 512 - totalUsedFrames << endl << endl;
 }
@@ -195,7 +198,7 @@ int main(int argc, char** argv) {
 
     memAccess.close();
 
-    printEndResults(allPids, allProcesses, totalMemAccess, totalPageFaults, totalUsedFrames);
+    printEndResults(allPids, allProcesses, totalUsedFrames);
     
     return EXIT_SUCCESS;
 }

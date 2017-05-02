@@ -10,7 +10,7 @@
 using namespace std;
 
 
-void Simulation::run(FlagOptions flags, ifstream file, int& totalUsedFrames) {
+void Simulation::run(FlagOptions flags, ifstream file, int& totalUsedFrames, vector<Process*> processes) {
     // TODO: implement me
 }
 
