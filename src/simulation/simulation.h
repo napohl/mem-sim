@@ -10,6 +10,7 @@
 #include "virtual_address/virtual_address.h"
 #include "flag_parser/flag_parser.h"
 #include "physical_address/physical_address.h"
+#include "frame/frame.h"
 #include <cstdlib>
 #include <fstream>
 #include <vector>
@@ -33,7 +34,7 @@ public:
   /**
    * Constructor
    */
-  Simulation(FlagOptions flags, std::vector<int> pids, std::vector<Process*> processes, std::vector<Frame> frames) : flags(flags), pids(pids), processes(processes), frames(frames) {}
+  Simulation(FlagOptions flags, std::vector<int> pids, std::vector<Process*> processes) : flags(flags), pids(pids), processes(processes) {}
 
   /**
    * Runs the simulation.

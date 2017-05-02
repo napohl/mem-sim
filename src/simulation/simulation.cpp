@@ -12,11 +12,13 @@
 
 using namespace std;
 
+bool const DEBUG = true;
+
 
 void Simulation::run(ifstream& file, int& totalUsedFrames) {
     //all the frames in memory are created here
     vector<Frame> allFrames;
-    for (int i = 0; i < NUM_FRAMES) {
+    for (int i = 0; i < NUM_FRAMES; i++) {
         Frame frame;
         allFrames.push_back(frame);
     }
@@ -24,34 +26,62 @@ void Simulation::run(ifstream& file, int& totalUsedFrames) {
     Simulation::frames = allFrames;
 
     int pid;
-    bitset<16> address;
+    string addressString;
     string line;
 
     while(!file.eof()) {
         stringstream loop;
         getline(file, line);
         loop << line;
-        //first entry is pid, second entry is memory access
+        //first entry is pid, second entry is memory address
         loop >> pid;
-        loop >> address;
-        cout << "pid: " << pid << "\taddress: " << address << endl;
+        loop >> addressString;
+        
+        VirtualAddress address = VirtualAddress::from_string(pid, addressString);
+
+        char value = performMemoryAccess(address);
+        if (DEBUG) {
+            cout << "Char value = " << value << endl << endl;
+        }
+
     }
 }
 
 
 char Simulation::performMemoryAccess(const VirtualAddress& address) {
-    //use virtual address to get page number of process (use the pid)
-    //bool fault = !page in memory
-    //if fault handlePageFault
-    //find physical address
-    //get char from offset
-    //if verbose print(fault, physcial, rss)
-    //return char
+    int pid = address.process_id;
+    size_t page = address.page;
+    Process* process;
+    //iterate through pids to find which entry in processes matches the pid
+    for (int i = 0; i < pids.size(); i++) {
+        if (pids[i] == pid) {
+            process = processes[i];
+            break;
+        }
+    }
+    //if the page is present, there is no fault so we use '!'
+    bool fault = !process->page_table.rows[page].present;
+    if (fault) {
+        handlePageFault(process, page);
+    }
+    int frame = 0;
+    int offset = address.offset;
+    //find the frame where this process now is
+    for (int i = 0; i < NUM_FRAMES; i++) {
+        if (frames[i].process == process && frames[i].page_number == page) {
+            frame = i;
+            break;
+        }
+    }
+    PhysicalAddress physical(frame, offset);
 
+    char value = frames[frame].contents->get_byte_at_offset(offset);
 
+    if (flags.verbose) {
+        printAccess(fault, physical, process->get_rss());
+    }
 
-
-    return 0;
+    return value;
 }
 
 

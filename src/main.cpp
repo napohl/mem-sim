@@ -185,15 +185,8 @@ int main(int argc, char** argv) {
     //skip one line
     getline(memAccess, line);
 
-    //all the frames in memory are created here
-    vector<Frame> frames;
-    for (int i = 0; i < FRAMES) {
-        Frame frame;
-        frames.push_back(frame);
-    }
-
     //run the simulation using the current input stream, flags, and all processes
-    Simulation simulation(flags, allPids, allProcesses, frames);
+    Simulation simulation(flags, allPids, allProcesses);
     simulation.run(memAccess, totalUsedFrames);
 
     memAccess.close();
