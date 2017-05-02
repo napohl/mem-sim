@@ -8,7 +8,11 @@
 #pragma once
 #include "process/process.h"
 #include "virtual_address/virtual_address.h"
+#include "flag_parser/flag_parser.h"
+#include "physical_address/physical_address.h"
 #include <cstdlib>
+#include <fstream>
+#include <vector>
 
 
 /**
@@ -21,15 +25,20 @@ public:
   /**
    * The maximum number of frames in the simulated system (512).
    */
-  static const size_t NUM_FRAMES = 1 << 9;
+  static const size_t NUM_FRAMES = 512;
 
 // PUBLIC API METHODS
 public:
 
   /**
+   * Constructor
+   */
+  Simulation(FlagOptions flags, std::vector<int> pids, std::vector<Process*> processes, std::vector<Frame> frames) : flags(flags), pids(pids), processes(processes), frames(frames) {}
+
+  /**
    * Runs the simulation.
    */
-  void run(FlagOptions flags, ifstream file, int& totalUsedFrames, vector<Process*> processes);
+  void run(std::ifstream& file, int& totalUsedFrames);
 
 // PRIVATE METHODS
 private:
@@ -56,5 +65,10 @@ private:
 
 // INSTANCE VARIABLES
 private:
+
+  FlagOptions flags;
+  std::vector<int> pids;
+  std::vector<Process*> processes;
+  std::vector<Frame> frames;
 
 };

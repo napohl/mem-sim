@@ -23,6 +23,9 @@
 
 using namespace std;
 
+//maximum amount of frames in system
+const int FRAMES = 512;
+
 /**
  * helper function for printing out results of the simulation
  */
@@ -40,7 +43,7 @@ void printEndResults(vector<int> pids, vector<Process*> processes, int totalUsed
     cout << "\nTotal memory accesses: " << totalAccess << endl;
     cout << "Total page faults: " << totalFaults << endl;
     //total frames is always 512
-    cout << "Free frames remaining: " << 512 - totalUsedFrames << endl << endl;
+    cout << "Free frames remaining: " << FRAMES - totalUsedFrames << endl << endl;
 }
 
 /**
@@ -179,22 +182,19 @@ int main(int argc, char** argv) {
         processAccess.close();
     }
 
-    //go through rest of file getting all memory accesses
-    int pid;
-    bitset<16> address;
-
     //skip one line
     getline(memAccess, line);
 
-    //might put this code in simulation::Run()
-    while(!memAccess.eof()) {
-        stringstream loop;
-        getline(memAccess, line);
-        loop << line;
-        //first entry is pid, second entry is memory access
-        loop >> pid;
-        loop >> address;
+    //all the frames in memory are created here
+    vector<Frame> frames;
+    for (int i = 0; i < FRAMES) {
+        Frame frame;
+        frames.push_back(frame);
     }
+
+    //run the simulation using the current input stream, flags, and all processes
+    Simulation simulation(flags, allPids, allProcesses, frames);
+    simulation.run(memAccess, totalUsedFrames);
 
     memAccess.close();
 
