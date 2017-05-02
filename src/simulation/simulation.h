@@ -29,7 +29,7 @@ public:
   /**
    * Runs the simulation.
    */
-  void run();
+  void run(FlagOptions flags, ifstream file, int& totalUsedFrames);
 
 // PRIVATE METHODS
 private:
@@ -39,13 +39,20 @@ private:
    * a physical address and loading the page into memory if needed. Returns the
    * byte at the given address.
    */
-  char perform_memory_access(const VirtualAddress& address);
+  char performMemoryAccess(const VirtualAddress& address);
 
   /**
    * Handles a page fault, attempting to load the given page for the given
    * process into memory.
    */
-  void handle_page_fault(Process* process, size_t page);
+  void handlePageFault(Process* process, size_t page);
+
+  /**
+   * Helper function to print out details when verbose flag is set.
+   * Fault is used to determine if it should print a page fault or in memory
+   * RSS is passed from the process that is being accessed to show the RSS of the process
+   */
+  void printAccess(bool fault, PhysicalAddress& address, int rss);
 
 // INSTANCE VARIABLES
 private:
