@@ -101,7 +101,6 @@ char Simulation::performMemoryAccess(const VirtualAddress& address) {
             }
         }
         PhysicalAddress physical(frame, offset);
-        process->page_table.rows[page].present = true;
         process->page_table.rows[page].last_accessed_at = TIME;
         process->memory_accesses++;
 
@@ -142,18 +141,24 @@ void Simulation::handlePageFault(Process* process, size_t page) {
     //if the process has no more free frames release one depending on replacement strategy
     process->page_faults++;
     process->page_table.rows[page].loaded_at = TIME;
+    if (DEBUG) {
+        cout << process->get_rss();
+    }
     if (process->get_rss() == flags.max_frames) {
         size_t pageNum;
         if (flags.strategy == ReplacementStrategy::FIFO) {
             pageNum = process->page_table.get_oldest_page();
+            process->page_table.rows[pageNum].present = false;
         }
         else {
             pageNum = process->page_table.get_least_recently_used_page();
+            process->page_table.rows[pageNum].present = false;
         }
         //now that we know the page num, we find this page in the frame and replace it
         for (int i = 0; i < NUM_FRAMES; i++) {
             if (frames[i].process == process && frames[i].page_number == pageNum) {
                 frames[i].set_page(process, page);
+                process->page_table.rows[page].present = true;
 
                 //changed frame to new page, no need to add to an empty frame with code below
                 return;
@@ -167,6 +172,7 @@ void Simulation::handlePageFault(Process* process, size_t page) {
         if (frames[i].process == nullptr) {
             //place page at free frame, then break
             frames[i].set_page(process, page);
+            process->page_table.rows[page].present = true;
             break;
         }
     }
