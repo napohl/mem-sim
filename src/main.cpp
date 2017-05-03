@@ -187,7 +187,10 @@ int main(int argc, char** argv) {
 
     //run the simulation using the current input stream, flags, and all processes
     Simulation simulation(flags, allPids, allProcesses);
-    simulation.run(memAccess, totalUsedFrames);
+    if (simulation.run(memAccess, totalUsedFrames) == EXIT_FAILURE) {
+        cout << "SEGFAULT\n";
+        return EXIT_FAILURE;
+    }
 
     memAccess.close();
 

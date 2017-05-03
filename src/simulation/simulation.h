@@ -39,7 +39,7 @@ public:
   /**
    * Runs the simulation.
    */
-  void run(std::ifstream& file, int& totalUsedFrames);
+  int run(std::ifstream& file, int& totalUsedFrames);
 
 // PRIVATE METHODS
 private:
